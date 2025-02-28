@@ -1,0 +1,60 @@
+分布式美食图片爬虫系统
+==================
+
+项目结构：
+├── main.py               # 主程序入口，协调所有组件
+├── config.py            # 配置文件，包含Redis、URL和爬虫设置
+├── crawler.py           # 爬虫核心组件，负责下载图片
+├── data_parser.py       # 数据解析器，处理网页内容
+├── storage.py           # 存储管理，处理Redis数据存储
+├── url_generator.py     # URL生成器，第二种URL分发方式
+├── check_status.py      # 系统状态检查工具
+├── monitor.py           # 系统监控组件
+├── downloaded_images/   # 下载的图片存储目录
+└── crawled_data/        # 爬虫数据存储目录
+
+系统特点：
+1. 分布式架构
+   - 使用Redis作为任务队列和数据存储
+   - 支持多进程并行下载
+   - 可横向扩展
+
+2. 双重URL分发机制
+   - 配置文件静态分发
+   - URL生成器动态分发
+
+3. 数据处理
+   - 智能图片命名
+   - 自动去重
+   - 数据清洗
+
+4. 监控和管理
+   - 实时状态监控
+   - 系统资源监控
+   - 便捷的状态查询工具
+
+5. 容错机制
+   - 自动重试
+   - 代理池支持
+   - 异常处理
+
+使用说明：
+1. 启动系统：
+   python main.py
+
+2. 生成新URL：
+   python url_generator.py
+
+3. 查看系统状态：
+   python check_status.py
+
+4. 监控系统：
+   实时显示在main.py运行窗口
+
+技术栈：
+- Python 3.x
+- Redis
+- multiprocessing
+- requests
+- lxml
+- fake-useragent 
