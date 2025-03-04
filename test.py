@@ -51,6 +51,7 @@ def start_parser(parse_queue, worker_count=2):
 
 
 def main():
+    start_time = time.time()
     print("=== 分布式爬虫系统启动 ===")
 
     # 创建共享队列，多进程都可访问该队列，交换数据
@@ -60,8 +61,8 @@ def main():
     redis_config = REDIS_CONFIG  # 使用 config_flink.py 中的 REDIS_CONFIG
 
     # 0. 清空 Redis 数据
-    # print("正在清空 Redis 数据...")
-    # clear_redis_data(redis_config)
+    print("正在清空 Redis 数据...")
+    clear_redis_data(redis_config)
 
     # 1. 初始化各个模块
     url_manager = URLManagerFlink(redis_config)  # 基于 Flink 的 URL 管理
@@ -75,7 +76,7 @@ def main():
     try:
         # 2. 添加种子URL
         print("正在初始化种子URL...")
-        url_manager.add_seed_urls(SEED_URLS)
+        url_manager.add_seed_urls_from_file("test_urls.txt")
 
         # 3. 启动数据解析器（先启动解析器）
         print("启动数据解析器...")
@@ -103,6 +104,10 @@ def main():
             try:
                 time.sleep(1)
             except KeyboardInterrupt:
+                end_time = time.time()
+                # 计算并输出程序运行时间
+                elapsed_time = end_time - start_time
+                print(f"程序运行时间: {elapsed_time:.6f} 秒")
                 print("\n正在停止所有进程...")
                 # 停止爬虫
                 for p in crawler_processes:

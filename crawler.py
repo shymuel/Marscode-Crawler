@@ -159,6 +159,7 @@ class Crawler:
                             if retry == CRAWLER_CONFIG['max_retries'] - 1:
                                 redis_client.sadd(REDIS_KEYS['failed_urls'], url)
 
+
                 except Exception as e:
                     print(f"爬虫 {crawler_id} 处理URL时发生错误: {str(e)}")
 

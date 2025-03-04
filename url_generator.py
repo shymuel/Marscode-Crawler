@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# 动态URL分发
+
 import redis
 from config import REDIS_CONFIG, REDIS_KEYS
 import requests
@@ -10,14 +12,11 @@ def generate_urls_by_keywords():
     redis_client = redis.Redis(**REDIS_CONFIG)
     ua = UserAgent()
     
-    # 美食关键词列表（使用拼音，这是站长之家的URL格式）
+    # 动物关键词列表（使用拼音，站长之家的URL格式）
     keywords = [
-        'meishitupian',  # 美食图片
-        'dangaotupian',  # 蛋糕图片
-        'mianbaotupian', # 面包图片
-        'xiaochitupian', # 小吃图片
-        'sushitupian',   # 寿司图片
-        'huoguotupian'   # 火锅图片
+        'xiaogouxiaomaotupian',  # 小狗小猫图片
+        'laohutupian',  # 老虎图片
+        'madetupian',  # 马的图片
     ]
     
     base_url = 'https://sc.chinaz.com/tupian/'
@@ -29,7 +28,7 @@ def generate_urls_by_keywords():
         print(f"\n正在处理关键词: {keyword}")
         
         # 处理多个页面
-        for page in range(1, 6):  # 每个关键词处理5页
+        for page in range(1, 3):  # 每个关键词处理2页
             try:
                 # 构建搜索URL
                 if page == 1:

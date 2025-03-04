@@ -18,22 +18,22 @@ def main():
     print("\n下载目录中的文件:")
     download_path = CRAWLER_CONFIG['download_path']
     total_files = 0
-    food_types = ['蛋糕', '面包', '饼干', '寿司', '火锅']
+    animal_names = ['老虎', '马', '狗', '猫']
     
-    for food in food_types:
+    for animal in animal_names:
         count = 0
-        print(f"\n{food}类图片:")
+        print(f"\n{animal}类图片:")
         for filename in os.listdir(download_path):
-            if food in filename:
+            if animal in filename:
                 print(f"- {filename}")
                 count += 1
                 total_files += 1
         if count == 0:
-            print(f"（暂无{food}类图片）")
+            print(f"（暂无{animal}类图片）")
         else:
-            print(f"共 {count} 张{food}类图片")
+            print(f"共 {count} 张{animal}类图片")
     
-    print(f"\n总计: {total_files} 张图片")
+    print(f"\n总计: {total_files} 张符合关键词的图片")
 
 if __name__ == '__main__':
     main() 

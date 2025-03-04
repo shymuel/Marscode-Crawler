@@ -13,6 +13,7 @@ class Monitor:
     def __init__(self):
         """初始化监控"""
         self.running = True
+        self.crawling_over = False
 
     def get_crawler_status(self, redis_client):
         """获取所有爬虫状态"""
@@ -83,6 +84,16 @@ class Monitor:
                 print("\n爬虫状态:")
                 status_dict = self.get_crawler_status(redis_client)
                 if status_dict:
+                    aver_idle_time = 0
+                    num_crawler = 0
+                    for crawler_id in status_dict.keys():
+                        aver_idle_time += status_dict[crawler_id]['idle_time']
+                        num_crawler += 1
+                    aver_idle_time /= num_crawler
+                    print(f"爬虫平均空闲时间：{aver_idle_time}秒")
+                    if aver_idle_time > 60:
+                        self.crawling_over = True
+
                     for crawler_id, status in status_dict.items():
                         print(f"爬虫 {crawler_id}:")
                         print(f"  - 状态: {status['status']}")

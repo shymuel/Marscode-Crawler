@@ -135,8 +135,10 @@ class DataParser:
                     content = data.get('content')
                     crawler_id = data.get('crawler_id')
 
-                    if not all([url, content, crawler_id]):
+                    if url == None or content == None or crawler_id==None or url == "" or content == "":
                         print(f"数据不完整: {data}")
+                        # print(all([url, content, crawler_id]))
+                        # print(f"url:{url==None}, content:{content==None}, crawler_id:{crawler_id==None}")
                         continue
 
                     print(f"解析进程开始处理来自爬虫 {crawler_id} 的数据")
