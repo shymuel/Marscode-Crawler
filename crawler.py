@@ -94,6 +94,7 @@ class Crawler:
 
                     if not url:
                         print(f"爬虫 {crawler_id} 等待任务...")
+                        self.update_status(crawler_id, "waiting", redis_client)
                         time.sleep(1)
                         continue
 
@@ -102,6 +103,7 @@ class Crawler:
                     # 检查是否是图片URL
                     if any(url.lower().endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif']):
                         print(f"爬虫 {crawler_id} 检测到图片URL，开始下载...")
+                        self.update_status(crawler_id, "downloading", redis_client)
                         if self.download_image(url, crawler_id):
                             redis_client.sadd(REDIS_KEYS['success_urls'], url)
                         continue
@@ -125,6 +127,7 @@ class Crawler:
                     for retry in range(CRAWLER_CONFIG['max_retries']):
                         try:
                             print(f"爬虫 {crawler_id} 第 {retry + 1} 次尝试请求 {url}")
+                            self.update_status(crawler_id, "requesting", redis_client)
                             response = requests.get(
                                 url,
                                 headers=headers,
@@ -135,6 +138,7 @@ class Crawler:
                             print(f"爬虫 {crawler_id} 获得响应状态码: {response.status_code}")
 
                             if response.status_code == 200:
+                                self.update_status(crawler_id, "request success", redis_client)
                                 # 设置正确的编码
                                 response.encoding = 'utf-8'
                                 print(f"爬虫 {crawler_id} 成功获取页面内容，长度: {len(response.text)}")
@@ -155,6 +159,7 @@ class Crawler:
                                 break
 
                         except Exception as e:
+                            self.update_status(crawler_id, "request fail", redis_client)
                             print(f"爬虫 {crawler_id} 请求失败: {str(e)}")
                             if retry == CRAWLER_CONFIG['max_retries'] - 1:
                                 redis_client.sadd(REDIS_KEYS['failed_urls'], url)
